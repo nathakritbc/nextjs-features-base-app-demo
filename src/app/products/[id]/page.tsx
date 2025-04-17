@@ -7,40 +7,39 @@ interface ProductPageParams {
   params: {
     id: string;
   };
+}
+
+interface MetadataParams extends ProductPageParams {
   product: Product;
 }
 
 export async function generateMetadata({
   product,
-}: ProductPageParams): Promise<Metadata> {
-  try {
-    return {
-      title: `${product?.title} | Demo App`,
-      description: product?.description,
-    };
-  } catch {
+}: MetadataParams): Promise<Metadata> {
+  if (!product) {
     return {
       title: "Product | Demo App",
       description: "View product details",
     };
   }
+
+  return {
+    title: `${product.title} | Demo App`,
+    description: product.description,
+  };
 }
 
 export default async function ProductPage({ params }: ProductPageParams) {
   const productId = parseInt(params.id, 10);
-
   const product = await fetchProductByIdAction(productId);
+
   if (!product) {
     return <div>Product not found</div>;
   }
 
-  await generateMetadata({ params, product });
   return (
     <main>
-      <ProductDetailWithHook
-        productId={productId}
-        result={product || undefined}
-      />
+      <ProductDetailWithHook productId={productId} result={product} />
     </main>
   );
 }

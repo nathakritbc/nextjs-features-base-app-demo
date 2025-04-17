@@ -18,7 +18,11 @@ export default function DashboardPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div
+            className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
+            role="status"
+            data-testid="loading-spinner"
+          ></div>
         </div>
       </div>
     );
@@ -43,7 +47,7 @@ export default function DashboardPage() {
           <div className="bg-blue-50 p-4 rounded-md">
             <p className="text-sm text-blue-800">
               You are currently signed in as{" "}
-              <strong>{session.user?.email}</strong>
+              <strong data-testid="header-email">{session.user?.email}</strong>
             </p>
           </div>
         </div>
@@ -54,15 +58,19 @@ export default function DashboardPage() {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-600">Email:</span>
-                <span>{session.user?.email}</span>
+                <span data-testid="account-email">{session.user?.email}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Name:</span>
-                <span>{session.user?.name || "Not provided"}</span>
+                <span data-testid="account-name">
+                  {session.user?.name || "Not provided"}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">User ID:</span>
-                <span>{session.user?.id || "Not available"}</span>
+                <span data-testid="account-id">
+                  {session.user?.id || "Not available"}
+                </span>
               </div>
             </div>
           </div>

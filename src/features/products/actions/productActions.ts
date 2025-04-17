@@ -30,14 +30,19 @@ export const fetchProductsAction = async (
 /**
  * Fetches a single product by ID
  */
-export const fetchProductByIdAction = async (id: number): Promise<Product> => {
+export async function fetchProductByIdAction(
+  productId: number
+): Promise<Product | undefined> {
   try {
-    const response = await axiosInstance.get(`/products/${id}`);
+    const response = await axiosInstance.get(`/products/${productId}`);
 
     return productSchema.parse(response.data);
   } catch (error) {
     const axiosError = error as AxiosError;
-    console.error(`Error fetching product with id ${id}:`, axiosError.message);
-    throw error;
+    console.error(
+      `Error fetching product with id ${productId}:`,
+      axiosError.message
+    );
+    return undefined;
   }
-};
+}
