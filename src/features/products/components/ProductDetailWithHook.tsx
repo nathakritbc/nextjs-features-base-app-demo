@@ -4,40 +4,62 @@ import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useApi } from "@/hooks/useApi";
-import { Product, productSchema } from "../api/productApi";
+import { Product, productSchema } from "../schemas/productSchema";
 import { z } from "zod";
 
 interface ProductDetailWithHookProps {
   productId: number;
+  result?: Product;
 }
 
 export default function ProductDetailWithHook({
   productId,
+  result,
 }: ProductDetailWithHookProps) {
   const {
     data: currentProduct,
     isLoading,
     error,
     fetchData,
+    setData,
   } = useApi<Product>(`/products/${productId}`);
 
-  useEffect(() => {
-    const loadProduct = async () => {
-      try {
-        const data = await fetchData();
-        if (data) {
-          // Validate data with Zod if needed
-          productSchema.parse(data);
-        }
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          console.error("Validation error:", error.errors);
-        }
+  const loadProduct = async () => {
+    console.log("loadProduct");
+    try {
+      const data = await fetchData();
+      if (data) {
+        // Validate data with Zod if needed
+        productSchema.parse(data);
       }
-    };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.error("Validation error:", error.errors);
+      }
+    }
+  };
+
+  const initialDataStateFunc = () => {
+    console.log("result>>>", result);
+
+    if (result) {
+      setData(result);
+      console.log("return result");
+      return result;
+    }
 
     loadProduct();
-  }, [fetchData, productId]);
+  };
+
+  useEffect(() => {
+    initialDataStateFunc();
+  }, [fetchData, productId, result]);
+
+  // Helper function to get the rating value
+  const getRatingValue = (rating: any): number => {
+    if (!rating) return 0;
+    return typeof rating === "object" ? rating.rate : rating;
+  };
 
   if (isLoading) {
     return (
@@ -142,7 +164,7 @@ export default function ProductDetailWithHook({
                       <svg
                         key={i}
                         className={`w-4 h-4 ${
-                          i < Math.round(currentProduct.rating || 0)
+                          i < Math.round(getRatingValue(currentProduct.rating))
                             ? "fill-current"
                             : "text-gray-300"
                         }`}
@@ -154,7 +176,7 @@ export default function ProductDetailWithHook({
                     ))}
                   </div>
                   <span className="text-xs text-gray-500 ml-1">
-                    ({currentProduct.rating})
+                    ({getRatingValue(currentProduct.rating)})
                   </span>
                 </div>
               )}

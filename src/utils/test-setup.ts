@@ -35,6 +35,6 @@ window.IntersectionObserver = mockIntersectionObserver;
 const originalConsoleError = console.error;
 console.error = (...args) => {
   // Suppress React useLayoutEffect warning in tests
-  if (args[0].includes("useLayoutEffect")) return;
+  if (typeof args[0] === 'string' && args[0].includes("useLayoutEffect")) return;
   originalConsoleError(...args);
 };

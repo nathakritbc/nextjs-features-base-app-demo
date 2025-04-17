@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fetchProductsAction, fetchProductByIdAction } from "./productActions";
 import axiosInstance from "@/lib/axios";
-import { Product, ProductsResponse } from "../api/productApi";
-
+import { Product, ProductsResponse } from "../schemas/productSchema";
 // Mock axios
 vi.mock("@/lib/axios", () => ({
   default: {

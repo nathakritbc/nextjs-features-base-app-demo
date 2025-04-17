@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { Product, ProductsResponse } from "../api/productApi";
 import {
   fetchProductByIdAction,
   fetchProductsAction,
 } from "../actions/productActions";
+import { Product, ProductsResponse } from "../schemas/productSchema";
 
 interface ProductState {
   products: Product[];

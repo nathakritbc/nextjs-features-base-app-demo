@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useApi } from "@/hooks/useApi";
-import { ProductsResponse, productsResponseSchema } from "../api/productApi";
 import { z } from "zod";
+import { productsResponseSchema } from "../schemas/productSchema";
+import { ProductsResponse } from "../schemas/productSchema";
 
 export default function ProductListWithHook() {
   const [pagination, setPagination] = useState({
@@ -51,10 +52,20 @@ export default function ProductListWithHook() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Helper function to get the rating value
+  const getRatingValue = (rating: any): number => {
+    if (!rating) return 0;
+    return typeof rating === "object" ? rating.rate : rating;
+  };
+
   if (isLoading && !data) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
+          role="status"
+          data-testid="loading-spinner"
+        ></div>
       </div>
     );
   }
@@ -111,7 +122,7 @@ export default function ProductListWithHook() {
                         <svg
                           key={i}
                           className={`w-4 h-4 ${
-                            i < Math.round(product.rating || 0)
+                            i < Math.round(getRatingValue(product.rating))
                               ? "fill-current"
                               : "text-gray-300"
                           }`}
@@ -123,7 +134,7 @@ export default function ProductListWithHook() {
                       ))}
                     </div>
                     <span className="text-xs text-gray-500 ml-1">
-                      ({product.rating})
+                      ({getRatingValue(product.rating)})
                     </span>
                   </div>
                 )}

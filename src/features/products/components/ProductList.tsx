@@ -13,10 +13,20 @@ export default function ProductList() {
     fetchProducts();
   }, [fetchProducts]);
 
+  // Helper function to get the rating value
+  const getRatingValue = (rating: any): number => {
+    if (!rating) return 0;
+    return typeof rating === "object" ? rating.rate : rating;
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
+          role="status"
+          data-testid="loading-spinner"
+        ></div>
       </div>
     );
   }
@@ -71,7 +81,7 @@ export default function ProductList() {
                         <svg
                           key={i}
                           className={`w-4 h-4 ${
-                            i < Math.round(product.rating || 0)
+                            i < Math.round(getRatingValue(product.rating))
                               ? "fill-current"
                               : "text-gray-300"
                           }`}
@@ -83,7 +93,7 @@ export default function ProductList() {
                       ))}
                     </div>
                     <span className="text-xs text-gray-500 ml-1">
-                      ({product.rating})
+                      ({getRatingValue(product.rating)})
                     </span>
                   </div>
                 )}

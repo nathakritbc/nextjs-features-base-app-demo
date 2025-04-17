@@ -2,11 +2,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useProductStore } from "./productStore";
 import * as productActions from "../actions/productActions";
-
+import { mock } from "vitest-mock-extended";
 // Mock the product actions
 vi.mock("../actions/productActions", () => ({
-  fetchProductsAction: vi.fn(),
-  fetchProductByIdAction: vi.fn(),
+  fetchProductsAction: mock(productActions.fetchProductsAction),
+  fetchProductByIdAction: mock(productActions.fetchProductByIdAction),
 }));
 
 describe("productStore", () => {

@@ -17,10 +17,19 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
     fetchProductById(productId);
   }, [fetchProductById, productId]);
 
+  // Helper function to get the rating value
+  const getRatingValue = (rating: any): number => {
+    if (!rating) return 0;
+    return typeof rating === "object" ? rating.rate : rating;
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
+          role="status"
+        ></div>
       </div>
     );
   }
@@ -89,7 +98,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
 
             {currentProduct.images && currentProduct.images.length > 0 && (
               <div className="p-4 grid grid-cols-4 gap-2">
-                {currentProduct.images.map((image, index) => (
+                {currentProduct.images.map((image: string, index: number) => (
                   <div
                     key={index}
                     className="relative h-20 w-full rounded overflow-hidden border"
@@ -120,7 +129,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
                       <svg
                         key={i}
                         className={`w-4 h-4 ${
-                          i < Math.round(currentProduct.rating || 0)
+                          i < Math.round(getRatingValue(currentProduct.rating))
                             ? "fill-current"
                             : "text-gray-300"
                         }`}
@@ -132,7 +141,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
                     ))}
                   </div>
                   <span className="text-xs text-gray-500 ml-1">
-                    ({currentProduct.rating})
+                    ({getRatingValue(currentProduct.rating)})
                   </span>
                 </div>
               )}

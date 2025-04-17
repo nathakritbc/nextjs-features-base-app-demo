@@ -49,9 +49,8 @@ export function useApi<T>(
       } catch (error) {
         const axiosError = error as AxiosError<ApiErrorResponse>;
         const errorMessage =
-          axiosError.response?.data?.message ||
-          axiosError.message ||
-          "An error occurred";
+          axiosError.response?.data?.message ??
+          (axiosError.message || "An error occurred");
 
         setState((prev) => ({
           ...prev,

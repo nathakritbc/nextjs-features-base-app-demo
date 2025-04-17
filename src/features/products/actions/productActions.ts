@@ -5,7 +5,7 @@ import {
   ProductsResponse,
   productSchema,
   productsResponseSchema,
-} from "../api/productApi";
+} from "../schemas/productSchema";
 
 /**
  * Fetches products with pagination
